@@ -8,27 +8,29 @@ import java.util.concurrent.TimeUnit;
 
 public class Fregador implements Runnable {
 
-    private final BandejaDePlatos bandeja;
-    private final LocalTime hora =LocalTime.now();
+    private BandejaDePlatos bandejaSucia;
+    private BandejaDePlatos bandejaFregada;
+    private final LocalTime hora = LocalTime.now();
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private int numSerie=0;
+    private int numSerie = 0;
 
 
-
-    Fregador(BandejaDePlatos bandeja){
-        this.bandeja=bandeja;
+    Fregador(BandejaDePlatos bandejaSucia,BandejaDePlatos bandejaFregada) {
+        this.bandejaSucia = bandejaSucia;
+        this.bandejaFregada=bandejaFregada;
     }
 
 
     @Override
     public void run() {
-            Platos plato;
-        while(!Thread.currentThread().isInterrupted()){
+        Platos plato;
+        while (!Thread.currentThread().isInterrupted()) {
             try {
-                plato=cogerPlato();
+                plato = cogerPlato();
             } catch (InterruptedException e) {
                 return;
-            } try {
+            }
+            try {
                 limpiarPlato(plato);
             } catch (InterruptedException e) {
                 return;
@@ -40,13 +42,12 @@ public class Fregador implements Runnable {
 
     private void limpiarPlato(Platos plato) throws InterruptedException {
         Random random = new Random();
-        TimeUnit.SECONDS.sleep(random.nextInt(5)+4);
-        bandeja.añadirBandeja(plato);
+        TimeUnit.SECONDS.sleep(random.nextInt(5) + 4);
+        bandejaFregada.añadirBandeja(plato);
 
     }
 
-    private Platos  cogerPlato() throws InterruptedException {
-        Thread.sleep(5000);
-        return new Platos(numSerie++);
+    private Platos cogerPlato() throws InterruptedException {
+        return bandejaSucia.extraerDeLaBandeja();
     }
 }

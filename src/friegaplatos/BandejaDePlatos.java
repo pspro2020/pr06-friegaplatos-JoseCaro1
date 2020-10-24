@@ -10,6 +10,13 @@ public class BandejaDePlatos {
     private final LocalTime hora =LocalTime.now();
     private final DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    public BandejaDePlatos(List<Platos> platos){
+        this.platos=platos;
+    }
+    public BandejaDePlatos(){
+
+    }
+
 
     protected synchronized void añadirBandeja(Platos plato) throws InterruptedException {
         System.out.printf("%s - %s plato nº %d\n",LocalTime.now().format(format),Thread.currentThread().getName(),plato.getNumSerie());
